@@ -1,0 +1,41 @@
+{
+  "name": "hq-spacecraft",
+  "version": "0.1.0",
+  "description": "quick to setup and easy to use stack of services for DAO instances that shares IPI compatibility",
+  "keywords": [
+    "ipi"
+  ],
+  "homepage": "https://github.com/ipicoin/hq-spacecraft#readme",
+  "bugs": {
+    "url": "https://github.com/ipicoin/hq-spacecraft/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipicoin/hq-spacecraft.git"
+  },
+  "license": "MIT",
+  "author": "Sett Sarverott",
+  "type": "commonjs",
+  "main": "src/main.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "task test"
+  },
+  "dependencies": {
+    "dockerode": "^5.0.0",
+    "isomorphic-git": "^1.38.1",
+    "socket.io": "^4.8.3",
+    "ssh2": "^1.17.0"
+  },
+  "devDependencies": {
+    "@go-task/cli": "^3.51.1",
+    "electron": "^42.2.0",
+    "husky": "^9.1.7",
+    "ollama": "^0.6.3",
+    "openai": "^6.38.0"
+  }
+}
