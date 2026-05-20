@@ -1,5 +1,7 @@
-name: infraforest-
+name: infraforest-ipi # https://github.com/Sarverott/infraforest 
 
 include:
-  - ./resources/compose.yaml # VOLUMENS AND MOUNTING
-  - ./src/compose.yaml # ROOT OF SERVICES
+  - ./resources/drivesets/compose.yaml # VOLUMENS AND MOUNTING
+  - ./resources/setups/compose.yaml # standard configurators
+  - ./src/services/compose.yaml # ROOT OF SERVICES
+  - ./src/networking/compose.yaml # network related containers
