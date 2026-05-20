@@ -1,0 +1,5 @@
+name: infraforest-
+
+include:
+  - ./resources/compose.yaml # VOLUMENS AND MOUNTING
+  - ./src/compose.yaml # ROOT OF SERVICES
