@@ -1,0 +1,16 @@
+## traefik.yml
+
+### https://github.com/Sarverott/infraforest/blob/master/services/traefik/traefik.yml
+
+
+
+# Docker configuration backend
+providers:
+  docker:
+    #defaultRule: "PathPrefix(`/services/{{ trimPrefix `/` .Name }}`)"
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+
+
+# API and dashboard configuration
+api:
+  insecure: true
