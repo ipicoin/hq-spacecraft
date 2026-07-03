@@ -1,0 +1,130 @@
+# HeadQuoter SpaceCraft — MVP orkiestracji self-hosted infra DAO (Fala 5)
+# Minimalny rdzen: Gitea (SVN/git) + n8n (automatyzacja) + Ollama (LLM).
+# Pelna wizja (NextCloud, Mattermost, WireGuard, LibreTranslate, ...) -> glowny README.md.
+#
+# Start:  cp .env.example .env  &&  docker compose up -d
+# Konfiguracja: patrz .env.example
+name: hq-spacecraft-mvp
+
+networks:
+  hq-mvp:
+    driver: bridge
+
+volumes:
+  gitea-data:
+  gitea-db:
+  n8n-data:
+  ollama-data:
+
+services:
+  # --- SVN/git self-host: rdzen zrodel projektow DAO ---
+  gitea:
+    image: gitea/gitea:1.22
+    container_name: hq-gitea
+    restart: unless-stopped
+    depends_on:
+      gitea-db:
+        condition: service_healthy
+    environment:
+      GITEA__database__DB_TYPE: postgres
+      GITEA__database__HOST: gitea-db:5432
+      GITEA__database__NAME: ${GITEA_DB_NAME:-gitea}
+      GITEA__database__USER: ${GITEA_DB_USER:-gitea}
+      GITEA__database__PASSWD: ${GITEA_DB_PASSWORD:-changeme_gitea_db}
+      GITEA__server__ROOT_URL: ${GITEA_ROOT_URL:-http://localhost:3000/}
+      GITEA__server__SSH_PORT: ${GITEA_SSH_PORT:-2222}
+      GITEA__security__INSTALL_LOCK: "true"
+      USER_UID: "1000"
+      USER_GID: "1000"
+    volumes:
+      - gitea-data:/data
+    ports:
+      - "${GITEA_HTTP_PORT:-3000}:3000"
+      - "${GITEA_SSH_PORT:-2222}:22"
+    networks:
+      - hq-mvp
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  gitea-db:
+    image: postgres:16-alpine
+    container_name: hq-gitea-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${GITEA_DB_NAME:-gitea}
+      POSTGRES_USER: ${GITEA_DB_USER:-gitea}
+      POSTGRES_PASSWORD: ${GITEA_DB_PASSWORD:-changeme_gitea_db}
+    volumes:
+      - gitea-db:/var/lib/postgresql/data
+    networks:
+      - hq-mvp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${GITEA_DB_USER:-gitea} -d ${GITEA_DB_NAME:-gitea}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # --- Automatyzacja: workflow / orkiestracja zadan czlonkow DAO ---
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: hq-n8n
+    restart: unless-stopped
+    environment:
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
+      GENERIC_TIMEZONE: ${TZ:-Europe/Warsaw}
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme_n8n}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-changeme_n8n_encryption_key_min_10chars}
+      # Ollama dostepne dla node'ow n8n pod http://ollama:11434
+      OLLAMA_HOST: ollama:11434
+    volumes:
+      - n8n-data:/home/node/.n8n
+    ports:
+      - "${N8N_PORT:-5678}:5678"
+    networks:
+      - hq-mvp
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:5678/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # --- LLM self-host: lokalna inteligencja dla organizacji ---
+  ollama:
+    image: ollama/ollama:latest
+    container_name: hq-ollama
+    restart: unless-stopped
+    environment:
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-5m}
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    networks:
+      - hq-mvp
+    healthcheck:
+      test: ["CMD-SHELL", "ollama --version || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    # Opcjonalne GPU (odkomentuj jesli masz NVIDIA + nvidia-container-toolkit):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]

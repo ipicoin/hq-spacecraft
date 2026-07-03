@@ -2,6 +2,19 @@
 
 > based on codes of https://github.com/Sarverott/infraforest published under terms of MIT license
 
+## MVP (Fala 5)
+
+Pelna wizja ponizej jest szeroka. Aby zaczac pracowac od razu, w katalogu
+[`mvp/`](./mvp/) znajduje sie **minimalny, dzialajacy rdzen orkiestracji**:
+**Gitea** (SVN/git self-host) + **n8n** (automatyzacja) + **Ollama** (LLM self-host).
+
+```bash
+cd mvp && cp .env.example .env && docker compose up -d
+```
+
+Szczegoly, mapa „co jest w MVP a co later" oraz sciezka rozszerzania do pelnego
+stosu: [`mvp/README.md`](./mvp/README.md).
+
 ### target concept of project "Daoismus" - scattered environments of estabilishing platform for federated organizations united under chains of independent protocol infrastructure
 
 portable set of containers in this forest includes complex set of comprehesive collection of open source tools that should fulfill basic needs of DAO and some proposals of execution these tasks:
