@@ -36,8 +36,27 @@ docker compose ps
 Dostep:
 
 - Gitea:  http://localhost:3000  (pierwszy zarejestrowany uzytkownik = admin)
-- n8n:    http://localhost:5678  (login/haslo z `.env`: `N8N_BASIC_AUTH_USER` / `N8N_BASIC_AUTH_PASSWORD`)
+- n8n:    http://127.0.0.1:5678  (patrz nizej — port zbindowany tylko do localhost)
 - Ollama: http://localhost:11434 (API; `curl http://localhost:11434/api/tags`)
+
+### Dostep do n8n i zakladanie konta ownera
+
+n8n w wersji >=1.0 **nie ma juz basic-auth** (stare zmienne `N8N_BASIC_AUTH_*`
+zostaly usuniete w v1.0 i sa cicho ignorowane). Uwierzytelnianie realizuje wbudowany
+system User Management: **pierwsza osoba, ktora otworzy panel, zaklada konto ownera**.
+
+Dlatego port n8n jest w `docker-compose.yml` zbindowany **tylko do `127.0.0.1`**
+(`127.0.0.1:5678:5678`) — panel nie jest wystawiony na zadnym innym interfejsie hosta.
+Konto ownera zaloz przy pierwszym wejsciu jednym z bezpiecznych sposobow:
+
+- lokalnie na hoscie: otworz `http://127.0.0.1:5678` i wypelnij formularz setupu ownera;
+- zdalnie: przez **tunel SSH**, np. `ssh -L 5678:127.0.0.1:5678 user@host`, a potem
+  `http://127.0.0.1:5678` w lokalnej przegladarce.
+
+**Produkcja:** nie zmieniaj bindu na `0.0.0.0` — wystaw n8n za **reverse-proxy z
+wlasnym uwierzytelnianiem** (np. Traefik/nginx + auth) albo za VPN. Odslonecie panelu
+bez auth pozwoliloby przypadkowemu odwiedzajacemu zalozyc konto ownera i przejac
+instancje.
 
 Pobierz pierwszy model do Ollama:
 
@@ -96,5 +115,10 @@ Sciezki rozwoju:
 - Wszystkie `changeme_*` w `.env.example` to placeholdery. Zmien je przed
   jakimkolwiek wystawieniem poza `localhost`.
 - `.env` nie jest commitowany.
-- n8n ma wlaczony basic-auth; Ollama i Gitea sluchaja na wszystkich interfejsach
-  hosta przez mapowanie portow — na produkcji schowaj je za proxy/VPN.
+- **n8n nie ma basic-auth** (usuniete w n8n v1.0). Dlatego jego port jest zbindowany
+  tylko do `127.0.0.1` — konto ownera zakladasz lokalnie / przez tunel SSH, a na
+  produkcji wystawiasz go za reverse-proxy z auth lub VPN (patrz sekcja „Dostep do n8n").
+- Ollama i Gitea sluchaja na wszystkich interfejsach hosta przez mapowanie portow —
+  na produkcji schowaj je za proxy/VPN.
+- Obrazy sa przypiete do konkretnych wersji (Gitea, PostgreSQL, n8n `1.70.0`,
+  Ollama `0.5.7`) — bez `latest`, dla powtarzalnosci i kontroli aktualizacji.

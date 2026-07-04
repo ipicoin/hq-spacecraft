@@ -71,7 +71,7 @@ services:
 
   # --- Automatyzacja: workflow / orkiestracja zadan czlonkow DAO ---
   n8n:
-    image: n8nio/n8n:latest
+    image: n8nio/n8n:1.70.0
     container_name: hq-n8n
     restart: unless-stopped
     environment:
@@ -80,16 +80,19 @@ services:
       N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
       WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
       GENERIC_TIMEZONE: ${TZ:-Europe/Warsaw}
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme_n8n}
+      # UWAGA: w n8n >=1.0 uwierzytelnianie realizuje wlasny system User Management
+      # (owner konto zakladane przy pierwszym wejsciu). Stare zmienne
+      # N8N_BASIC_AUTH_* zostaly USUNIETE w v1.0 i sa cicho ignorowane — dlatego
+      # port ponizej jest zbindowany TYLKO do 127.0.0.1 (patrz README: sekcja Dostep).
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-changeme_n8n_encryption_key_min_10chars}
       # Ollama dostepne dla node'ow n8n pod http://ollama:11434
       OLLAMA_HOST: ollama:11434
     volumes:
       - n8n-data:/home/node/.n8n
     ports:
-      - "${N8N_PORT:-5678}:5678"
+      # Bind tylko do localhost — n8n >=1.0 nie ma basic-auth, wiec panel NIE moze
+      # sluchac na wszystkich interfejsach. Dostep zdalny: tunel SSH lub reverse-proxy z auth.
+      - "127.0.0.1:${N8N_PORT:-5678}:5678"
     networks:
       - hq-mvp
     depends_on:
@@ -103,7 +106,7 @@ services:
 
   # --- LLM self-host: lokalna inteligencja dla organizacji ---
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.5.7
     container_name: hq-ollama
     restart: unless-stopped
     environment:
