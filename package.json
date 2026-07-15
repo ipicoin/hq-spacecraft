@@ -1,7 +1,7 @@
 {
   "name": "hq-spacecraft",
   "version": "0.1.0",
-  "description": "quick to setup and easy to use stack of services for DAO instances that shares IPI compatibility",
+  "description": "Experimental self-hosted collaboration infrastructure for independently operated organizations.",
   "keywords": [
     "ipi"
   ],
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/ipicoin/hq-spacecraft.git"
   },
   "license": "MIT",
-  "author": "Sett Sarverott",
+  "author": "IPI contributors",
   "type": "commonjs",
   "main": "src/main.js",
   "directories": {
