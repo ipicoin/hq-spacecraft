@@ -1,62 +1,57 @@
-# HeadQuoter SpaceCraft
+# HQ Spacecraft
 
-> based on codes of https://github.com/Sarverott/infraforest published under terms of MIT license
+An experimental, self-hosted service composition for organizations that want
+to operate collaboration infrastructure under their own administrative control.
 
-### target concept of project "Daoismus" - scattered environments of estabilishing platform for federated organizations united under chains of independent protocol infrastructure
+> **Status: pre-alpha.** This repository is an infrastructure design space, not
+> a hardened distribution. Do not expose it to the internet or place sensitive
+> data in it without reviewing every included service, image, secret, port, and
+> storage path.
 
-portable set of containers in this forest includes complex set of comprehesive collection of open source tools that should fulfill basic needs of DAO and some proposals of execution these tasks:
-- cloud storage to allocate any type of files
-    - selfhosted NextCloud
-- SVN server of public projects and internal developement
-    - selfhosted gitea as internal developement, closed sourcing and customizations per organization
-    - delegated to github officials as unified shared source
-    - alternatives can act as mirrors
-- text chatting communication public and internal
-    - selfhosted mattermost
-    - official telegram and discord for united gathered community 
-- LLM management interfaces and knowledge extendings
-    - selfhosted openwebui per organization
-    - selfhosted ollama hosting per organization
-    - selfhosted vector databases per organization
-    - unified universal repositories of ditital entities (advanced llms) published on huggingface
-- automatisation systems for specific and general purposes
-    - selfhosted n8n to give advanced toolset possibilities for all members of organization to realize their tasks related with role they had receive
-- cyber-sec tooling for blue teams, red teams, forensics, detection and prevention
-    - reformed extend standarized stack of OSINT framework collection
-    - backbounty programs, hackatons and general events that engage experts to collective share of knowledge with anti-crisis brainstorming sessions around hardcore topics
-- VPN gates for endpoints inside organization and between instances of federated branches
-    - wireguard as common default base of scattered networking
-- networking handlers and scattered connectivity solutions
-    - unified set of scripts to ssh various usage cases including tunnelings, proxies and reusing retro-level old computer hardware to make IT specialists have interesting streching and inspiration to solve some of complex problems
-- soc-med helpers with user-friendly interfaces
-    - SEO strategical posting
-    - reduction of repetitive work by multipublishing orchestras 
-    - analitics of trends and intel for improvement adaptivity of organization for needs of society
-- human language tranlations management
-    - selfhosted libretranslate
-- federation estabilishing and maintaining
-    - ldap across federative zones
-- cooperation office programs for common tasks
-    - obsidian as standard notebook 
-    - markdown as well-known syntax language
-- access and privileges management environment
-    - controll under own spaces and sensitive data
-- identity verification methods internal and external
-    - `[...]`
-- integrity of ecosystems and inspection checks
-    - `[...]`
-- migration and backup handling for further growth
-    - `[...]`
-- stable consensus between independent branches
-    - `[...]`
-- executive protocols of unified diplomacy between sides of unions
-    - `[...]`
-- democratised solutions of verifiable values and honesty
-    - `[...]`
-- handling unfairness that threats common freedom
-    - `[...]`
-- integrated unified syndication of shares and agreements
-    - `[...]`
-- standarization procedures and solutions deployments
-    - `[...]`
+## Scope
 
+The current Compose tree explores independently deployable building blocks for:
+
+- source collaboration and automation with Gitea and n8n;
+- files and knowledge with Nextcloud and Wiki.js;
+- network access and routing with WireGuard, DNS, and Traefik;
+- search, monitoring, security diagnostics, and supporting databases; and
+- portable storage and import/export workflows.
+
+The root [`compose.yaml`](compose.yaml) combines smaller definitions under
+`src/` and `resources/`. Many definitions are incomplete and still require a
+documented threat model, pinned images, secret management, health checks,
+backup and restore tests, and upgrade procedures.
+
+## Development
+
+Prerequisites depend on the service being evaluated. At minimum, inspect the
+Compose includes and install a current Docker Compose implementation before
+running anything.
+
+The current Taskfile only verifies Task itself is available:
+
+```sh
+task
+```
+
+Before proposing a deployable profile, document its intended environment,
+network exposure, data classification, resource requirements, configuration,
+backup plan, and reproducible verification steps.
+
+## Relationship to IPI
+
+HQ Spacecraft is an incubating operations project. It is not part of the IPI
+consensus protocol and is not required to implement an IPI specification.
+Interoperability or compliance claims must identify the relevant IPI proposal
+and public verification evidence.
+
+## Upstream and license
+
+This work began from concepts and code in
+[`Sarverott/infraforest`](https://github.com/Sarverott/infraforest). Upstream
+and IPI changes are distributed under the [MIT License](LICENSE). Attribution
+details are recorded in [`.github/NOTICE.md`](.github/NOTICE.md).
+
+Contributions follow the organization-wide contributing, security, and
+governance policies in [`ipicoin/.github`](https://github.com/ipicoin/.github).
