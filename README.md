@@ -1,57 +1,54 @@
 # HQ Spacecraft
 
-An experimental, self-hosted service composition for organizations that want
-to operate collaboration infrastructure under their own administrative control.
+Repository scaffold for researching self-hosted collaboration infrastructure
+under an organization's own administrative control.
 
-> **Status: pre-alpha.** This repository is an infrastructure design space, not
-> a hardened distribution. Do not expose it to the internet or place sensitive
-> data in it without reviewing every included service, image, secret, port, and
-> storage path.
+## What the source contains
 
-## Scope
+- a root Compose file that includes storage, setup, service, and networking
+  layers;
+- directory boundaries for Gitea, n8n, Nextcloud, Wiki.js, search, Sentry,
+  WireGuard, Traefik, DNS, and related services;
+- one partial Pi-hole Compose definition; and
+- placeholder Python utilities, a hello-world command, and a Taskfile greeting.
 
-The current Compose tree explores independently deployable building blocks for:
+Most included Compose files and all backup/import/inspection utilities are
+currently empty. The root composition therefore does not deploy the service set
+named by the directory structure. Those names express the research inventory,
+not implemented infrastructure.
 
-- source collaboration and automation with Gitea and n8n;
-- files and knowledge with Nextcloud and Wiki.js;
-- network access and routing with WireGuard, DNS, and Traefik;
-- search, monitoring, security diagnostics, and supporting databases; and
-- portable storage and import/export workflows.
+## Intended role
 
-The root [`compose.yaml`](compose.yaml) combines smaller definitions under
-`src/` and `resources/`. Many definitions are incomplete and still require a
-documented threat model, pinned images, secret management, health checks,
-backup and restore tests, and upgrade procedures.
+HQ Spacecraft explores how collaboration, source hosting, automation,
+knowledge, networking, monitoring, backup, and recovery could be assembled as
+replaceable self-hosted services. It is not part of IPI consensus and is not
+required to implement an IPI protocol specification.
 
-## Development
+Before any service profile becomes deployable, it needs pinned images,
+configuration schemas, secret management, network exposure rules, health
+checks, resource limits, backup/restore procedures, upgrade and rollback tests,
+and a documented threat model.
 
-Prerequisites depend on the service being evaluated. At minimum, inspect the
-Compose includes and install a current Docker Compose implementation before
-running anything.
+## Development status
 
-The current Taskfile only verifies Task itself is available:
+**Prototype scaffold.** Do not expose the current composition to the internet
+or place sensitive data in it. The only root Task command currently prints a
+greeting:
 
 ```sh
 task
 ```
 
-Before proposing a deployable profile, document its intended environment,
-network exposure, data classification, resource requirements, configuration,
-backup plan, and reproducible verification steps.
-
-## Relationship to IPI
-
-HQ Spacecraft is an incubating operations project. It is not part of the IPI
-consensus protocol and is not required to implement an IPI specification.
-Interoperability or compliance claims must identify the relevant IPI proposal
-and public verification evidence.
+A future implemented profile should document its environment and provide a
+Compose validation test plus a minimal end-to-end health check.
 
 ## Upstream and license
 
 This work began from concepts and code in
-[`Sarverott/infraforest`](https://github.com/Sarverott/infraforest). Upstream
-and IPI changes are distributed under the [MIT License](LICENSE). Attribution
-details are recorded in [`.github/NOTICE.md`](.github/NOTICE.md).
+[`Sarverott/infraforest`](https://github.com/Sarverott/infraforest). Attribution
+is recorded in [`.github/NOTICE.md`](.github/NOTICE.md), and the repository is
+distributed under the [MIT License](LICENSE).
 
 Contributions follow the organization-wide contributing, security, and
-governance policies in [`ipicoin/.github`](https://github.com/ipicoin/.github).
+governance policies in
+[`ipicoin/.github`](https://github.com/ipicoin/.github).
