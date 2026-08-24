@@ -1,7 +1,7 @@
 {
   "name": "hq-spacecraft",
   "version": "0.1.0",
-  "description": "Experimental self-hosted collaboration infrastructure for independently operated organizations.",
+  "description": "Scaffold for self-hosted collaboration infrastructure research.",
   "keywords": [
     "ipi"
   ],
